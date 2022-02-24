@@ -49,7 +49,7 @@ if($parent_id){//parent_id가 있다는건 답글이라는 의미다.
             <textarea class="form-control" id="exampleFormControlTextarea1" name="content" rows="3"><?php echo $rs->content;?></textarea>
             </div>
             <div class="mb-3">
-                <input type="file" name="upfile[]" id="upfile" multiple>
+                <input type="file" name="upfile[]" id="upfile" multiple class="form-control form-control-lg" aria-label="Large file input example">
             </div>
             <!-- 첨부된 이미지 표시 -->
             <div class="row row-cols-1 row-cols-md-6 g-4" id="imageArea">
