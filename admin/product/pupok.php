@@ -10,6 +10,10 @@ if(!$_SESSION['AUID']){
 
 $cate=$_POST["cate1"].$_POST["cate1"].$_POST["cate1"];//대중소분류를 모두 저장한다.
 $name=$_POST["name"];//제품명
+$price=$_POST["price"];//가격
+$sale_price=$_POST["sale_price"];//세일가
+$sale_ratio=$_POST["sale_ratio"];//세일비율
+$cnt=$_POST["cnt"];//재고
 $contents=rawurldecode($_POST['contents']);//제품 설명
 $ismain=$_POST["ismain"];//메인
 $isnew=$_POST["isnew"];//신상품
@@ -67,8 +71,6 @@ VALUES('$name'
 , '".$_SESSION['AUID']."'
 , '".$sale_end_date."'
 , now())";
-
-
 
 $rs=$mysqli->query($query) or die($mysqli->error);
 $pid = $mysqli -> insert_id;
