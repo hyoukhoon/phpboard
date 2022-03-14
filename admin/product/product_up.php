@@ -20,8 +20,10 @@ while($rs = $result->fetch_object()){
         <div style="text-align:center;padding:20px;"><H3>제품등록하기</H3></div>
         <table class="table table-sm table-bordered">
           <tbody>
-            <form method="post" action="pupok.php" enctype="multipart/form-data">
+        <form method="post" action="pupok.php" onsubmit="return save()" enctype="multipart/form-data">
             <input type="hidden" name="file_table_id" id="file_table_id" value="">
+            <input type="hidden" name="contents" id="contents" value="">
+            
           <tr>
             <th scope="row" class="thst">카테고리선택</th>
             <td>
@@ -108,11 +110,17 @@ while($rs = $result->fetch_object()){
           </tbody>
         </table>
         
-        <button class="btn btn-primary" type="button">등록완료</button>
+        <button class="btn btn-primary" type="submit">등록완료</button>
 </form>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script>
+
+    function save(){
+        var markup = $('#summernote').summernote('code');
+          var contents=encodeURIComponent(markup);
+          $("#contents").val(contents);
+    }
 
     $(function(){
         $('#summernote').summernote({
