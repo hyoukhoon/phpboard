@@ -57,6 +57,22 @@ while($rs = $result->fetch_object()){
             <td><input type="text" class="form-control" name="name" id="name"></td>
           </tr>
           <tr>
+            <th scope="row" class="thst">제품가격</th>
+            <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="price" id="price"></td>
+          </tr>
+          <tr>
+            <th scope="row" class="thst">세일가격</th>
+            <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="sale_price" id="sale_price"></td>
+          </tr>
+          <tr>
+            <th scope="row" class="thst">세일비율</th>
+            <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="sale_ratio" id="sale_ratio"></td>
+          </tr>
+          <tr>
+            <th scope="row" class="thst">재고</th>
+            <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="cnt" id="cns"></td>
+          </tr>
+          <tr>
             <th scope="row" class="thst">전시옵션</th>
             <td>
             <input class="form-check-input" type="checkbox" name="ismain" id="ismain" value="1">메인&nbsp;
