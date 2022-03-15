@@ -10,6 +10,7 @@ if(!$_SESSION['AUID']){
 
 $cate=$_POST["cate1"].$_POST["cate1"].$_POST["cate1"];//대중소분류를 모두 저장한다.
 $name=$_POST["name"];//제품명
+$delivery_fee=$_POST["delivery_fee"];//택배비
 $price=$_POST["price"];//가격
 $sale_price=$_POST["sale_price"];//세일가
 $sale_ratio=$_POST["sale_ratio"];//세일비율
@@ -53,7 +54,7 @@ if($_FILES["thumbnail"]["name"]){//첨부한 파일이 있으면
 
 $sale_cnt = 0;//판매량
 $query="INSERT INTO products
-(name, cate, content, thumbnail, price, sale_price, sale_ratio, cnt, sale_cnt, isnew, isbest, isrecom, ismain, locate, userid, sale_end_date, reg_date)
+(name, cate, content, thumbnail, price, sale_price, sale_ratio, cnt, sale_cnt, isnew, isbest, isrecom, ismain, locate, userid, sale_end_date, reg_date, delivery_fee)
 VALUES('$name'
 , '".$cate."'
 , '".$contents."'
@@ -70,7 +71,9 @@ VALUES('$name'
 , '".$locate."'
 , '".$_SESSION['AUID']."'
 , '".$sale_end_date."'
-, now())";
+, now()
+, '".$delivery_fee."'
+)";
 
 $rs=$mysqli->query($query) or die($mysqli->error);
 $pid = $mysqli -> insert_id;

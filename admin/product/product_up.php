@@ -1,5 +1,10 @@
 <?php
 include $_SERVER["DOCUMENT_ROOT"]."/inc/header.php";
+if(!$_SESSION['AUID']){
+    echo "<script>alert('권한이 없습니다.');history.back();</script>";
+    exit;
+}
+
 
 $query="select * from category where step=1";
 $result = $mysqli->query($query) or die("query error => ".$mysqli->error);
@@ -55,6 +60,10 @@ while($rs = $result->fetch_object()){
           <tr>
             <th scope="row" class="thst">제품명</th>
             <td><input type="text" class="form-control" name="name" id="name"></td>
+          </tr>
+          <tr>
+            <th scope="row" class="thst">택배비</th>
+            <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="delivery_fee" id="delivery_fee"></td>
           </tr>
           <tr>
             <th scope="row" class="thst">제품가격</th>

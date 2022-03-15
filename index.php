@@ -103,16 +103,16 @@ if($firstPageNumber > $totalPage) {
 			<?php }?>
 		</tbody>
 		</table>
-		<div class="d-grid gap-2" style="margin:20px;">
+		<!-- <div class="d-grid gap-2" style="margin:20px;">
 			<button class="btn btn-secondary" type="button" id="more_button">더보기</button>
-		</div>
+		</div> -->
 		<form method="get" action="<?php echo $_SERVER["PHP_SELF"]?>">
 		<div class="input-group mb-12" style="margin:auto;width:50%;">
 				<input type="text" class="form-control" name="search_keyword" id="search_keyword" placeholder="제목과 내용에서 검색합니다." value="<?php echo $search_keyword;?>" aria-label="Recipient's username" aria-describedby="button-addon2">
 				<button class="btn btn-outline-secondary" type="button" id="search">검색</button>
 		</div>
 		</form>
-		<!-- <p>
+		<p>
 			<nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-center">
 					<li class="page-item">
@@ -130,7 +130,7 @@ if($firstPageNumber > $totalPage) {
 					</li>
 				</ul>
 			</nav>
-		</p> -->
+		</p>
 
 		<p style="text-align:right;">
 
