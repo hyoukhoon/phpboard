@@ -8,7 +8,7 @@ if(!$_SESSION['AUID']){
 }
 
 
-$cate=$_POST["cate1"].$_POST["cate1"].$_POST["cate1"];//대중소분류를 모두 저장한다.
+$cate=$_POST["cate1"].$_POST["cate2"].$_POST["cate3"];//대중소분류를 모두 저장한다.
 $name=$_POST["name"];//제품명
 $delivery_fee=$_POST["delivery_fee"];//택배비
 $price=$_POST["price"];//가격

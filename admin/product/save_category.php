@@ -2,7 +2,7 @@
 include $_SERVER["DOCUMENT_ROOT"]."/inc/dbcon.php";
 ini_set( 'display_errors', '0' );
 
-if(!$_SESSION['UID']){
+if(!$_SESSION['AUID']){
     $retun_data = array("result"=>"member");
     echo json_encode($retun_data);
     exit;
