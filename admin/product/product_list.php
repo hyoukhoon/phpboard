@@ -80,7 +80,7 @@ $sql .= $search_where;
 $order = " order by pid desc";//마지막에 등록한걸 먼저 보여줌
 $limit = " limit $startLimit, $pageCount";
 $query = $sql.$order.$limit;
-echo "query=>".$query."<br>";
+//echo "query=>".$query."<br>";
 $result = $mysqli->query($query) or die("query error => ".$mysqli->error);
 while($rs = $result->fetch_object()){
     $rsc[]=$rs;
@@ -164,6 +164,11 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
         </div>
         
 		</form>
+        <form method="get" name="plist" action="plist_save.php">
+        <div style="text-align:right;padding:10px;">  
+            <button class="btn btn-primary" type="submit">변경내용저장</button>
+        </div>
+        
         <table class="table table-sm table-bordered">
           <thead>
           <tr style="text-align:center;">
@@ -182,7 +187,8 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
           <?php 
 				foreach($rsc as $r){
   			?>
-          <tr >
+              <input type="hidden" name="pid[]" value="<?php echo $r->pid;?>">
+          <tr>
             <th scope="row" style="width:100px;"><img src="<?php echo $r->thumbnail;?>" style="max-width:100px;"></th>
             <td><?php echo $r->name;?></td>
             <td style="text-align:right;"><s><?php echo number_format($r->price);?>원</s>
@@ -196,11 +202,18 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
             <td style="text-align:center;"><input type="checkbox" name="isnew[<?php echo $r->pid;?>]" id="isnew_<?php echo $r->pid;?>" value="1" <?php if($r->isnew){echo "checked";}?>></td>
             <td style="text-align:center;"><input type="checkbox" name="isbest[<?php echo $r->pid;?>]" id="isbest_<?php echo $r->pid;?>" value="1" <?php if($r->isbest){echo "checked";}?>></td>
             <td style="text-align:center;"><input type="checkbox" name="isrecom[<?php echo $r->pid;?>]" id="isrecom_<?php echo $r->pid;?>" value="1" <?php if($r->isrecom){echo "checked";}?>></td>
-            <td style="text-align:center;"><?php echo isStatus($r->status);?></td>
+            <td style="text-align:center;">
+                <select class="form-select" style="max-width:100px;" name="stat[<?php echo $r->pid;?>]" id="stat" aria-label="Default select example">
+                    <option value="-1" <?php if($r->status==-1){echo "selected";}?>>판매중지</option>
+                    <option value="0" <?php if($r->status==0){echo "selected";}?>>대기</option>
+                    <option value="1" <?php if($r->status==1){echo "selected";}?>>판매중</option>
+                </select>
+            </td>
           </tr>
           <?php }?>
           </tbody>
         </table>
+        </form>
         <a href="product_up.php">
             <button class="btn btn-primary" type="button">제품등록</button>
         </a>
