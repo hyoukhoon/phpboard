@@ -203,7 +203,7 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
             <td style="text-align:center;"><input type="checkbox" name="isbest[<?php echo $r->pid;?>]" id="isbest_<?php echo $r->pid;?>" value="1" <?php if($r->isbest){echo "checked";}?>></td>
             <td style="text-align:center;"><input type="checkbox" name="isrecom[<?php echo $r->pid;?>]" id="isrecom_<?php echo $r->pid;?>" value="1" <?php if($r->isrecom){echo "checked";}?>></td>
             <td style="text-align:center;">
-                <select class="form-select" style="max-width:100px;" name="stat[<?php echo $r->pid;?>]" id="stat" aria-label="Default select example">
+                <select class="form-select" style="max-width:120px;" name="stat[<?php echo $r->pid;?>]" id="stat" aria-label="Default select example">
                     <option value="-1" <?php if($r->status==-1){echo "selected";}?>>판매중지</option>
                     <option value="0" <?php if($r->status==0){echo "selected";}?>>대기</option>
                     <option value="1" <?php if($r->status==1){echo "selected";}?>>판매중</option>
