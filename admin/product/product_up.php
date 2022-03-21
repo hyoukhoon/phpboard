@@ -23,9 +23,9 @@ while($rs = $result->fetch_object()){
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
         <div style="text-align:center;padding:20px;"><H3>제품등록하기</H3></div>
+<form method="post" action="pupok.php" onsubmit="return save()" enctype="multipart/form-data">        
         <table class="table table-sm table-bordered">
           <tbody>
-        <form method="post" action="pupok.php" onsubmit="return save()" enctype="multipart/form-data">
             <input type="hidden" name="file_table_id" id="file_table_id" value="">
             <input type="hidden" name="contents" id="contents" value="">
             
@@ -128,7 +128,11 @@ while($rs = $result->fetch_object()){
             </td>
           </tr>
           <tr>
-            <th scope="row" class="thst">옵션1(컬러)</th>
+            <th scope="row" class="thst">
+                <select class="form-select" name="optionCate1" id="optionCate1">
+                    <option value="컬러" selected>컬러</option>
+                </select>
+            </th>
             <td>
                 <table class="table">
                 <thead>
@@ -140,7 +144,7 @@ while($rs = $result->fetch_object()){
                     </tr>
                 </thead>
                 <tbody id="option1">
-                    <tr>
+                    <tr id="optionTr1">
                     <th scope="row">
                         <input class="form-control" type="text" style="max-width:200px;" value="" name="optionName1[]">
                     </th>
@@ -152,28 +156,20 @@ while($rs = $result->fetch_object()){
                     </td>
                     <td>
                         <div class="input-group">
-                            <input type="text" class="form-control" style="max-width:100px;" value="0" name="optionPric1e[]">
+                            <input type="text" class="form-control" style="max-width:100px;" value="0" name="optionPrice1[]">
                             <span class="input-group-text">원</span>
                         </div>
                     </td>
                     <td>
-                        <input type="file" multiple name="optionImage1[]" id="optionImage" style="display:none;">
-                        <div id="target_file_wrap">
-                            <a href="#" onclick="jQuery('#optionImage').click()" class="btn btn-primary">이미지선택</a>
-                        </div>
+                        <input type="file" class="form-control" name="optionImage1[]" id="optionImage1">
                     </td>
                     </tr>
                 </tbody>
                 </table>
+                <button class="btn btn-secondary" type="button" onclick="opt1cp()">옵션추가</button>
             </td>
           </tr>
-          <tr>
-            <th scope="row" class="thst">옵션2(사이즈)</th>
-            <td>
-                <button class="btn btn-secondary" type="button">옵션추가</button>
-            </td>
-          </tr>
-          
+        
           </tbody>
         </table>
         
@@ -182,6 +178,12 @@ while($rs = $result->fetch_object()){
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script>
+
+    function opt1cp(){
+        var addHtml=$("#optionTr1").html();
+        var addHtml="<tr>"+addHtml+"</tr>";
+        $("#option1").append(addHtml);
+    }
 
     function save(){
         var markup = $('#summernote').summernote('code');
