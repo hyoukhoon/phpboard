@@ -116,9 +116,9 @@ while($rs = $result->fetch_object()){
             <th scope="row" class="thst">썸네일</th>
             <td><input type="file" class="form-control" name="thumbnail" id="thumbnail"></td>
           </tr>
-          <tr>
+          <tr style="max-height:100px;">
             <th scope="row" class="thst">추가이미지</th>
-            <td>
+            <td style="height:100px;">
                 <input type="file" multiple name="upfile[]" id="upfile" style="display:none;">
                 <div id="target_file_wrap">
                     <a href="#" onclick="jQuery('#upfile').click()" class="btn btn-primary">이미지선택</a>
@@ -128,8 +128,50 @@ while($rs = $result->fetch_object()){
             </td>
           </tr>
           <tr>
-            <th scope="row" class="thst">옵션</th>
-            <td></td>
+            <th scope="row" class="thst">옵션1(컬러)</th>
+            <td>
+                <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">옵션명</th>
+                    <th scope="col">재고</th>
+                    <th scope="col">가격</th>
+                    <th scope="col">이미지</th>
+                    </tr>
+                </thead>
+                <tbody id="option1">
+                    <tr>
+                    <th scope="row">
+                        <input class="form-control" type="text" style="max-width:200px;" value="" name="optionName1[]">
+                    </th>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control" style="max-width:100px;" value="0" name="optionCnt1[]">
+                            <span class="input-group-text">개</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control" style="max-width:100px;" value="0" name="optionPric1e[]">
+                            <span class="input-group-text">원</span>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="file" multiple name="optionImage1[]" id="optionImage" style="display:none;">
+                        <div id="target_file_wrap">
+                            <a href="#" onclick="jQuery('#optionImage').click()" class="btn btn-primary">이미지선택</a>
+                        </div>
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" class="thst">옵션2(사이즈)</th>
+            <td>
+                <button class="btn btn-secondary" type="button">옵션추가</button>
+            </td>
           </tr>
           
           </tbody>
