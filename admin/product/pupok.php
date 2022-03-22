@@ -45,7 +45,7 @@ if($_FILES["thumbnail"]["name"]){//첨부한 파일이 있으면
         $thumbnail = $newfilename.".".$ext;//새로운 파일이름과 확장자를 합친다
         
         if(move_uploaded_file($_FILES["thumbnail"]["tmp_name"], $save_dir.$thumbnail)){
-            $thumbnail = "http://localhost:8008/pdata/".$thumbnail;
+            $thumbnail = "/pdata/".$thumbnail;
         }else{
             echo "<script>alert('이미지를 등록할 수 없습니다. 관리자에게 문의해주십시오.');history.back();</script>";
             exit;
@@ -99,14 +99,14 @@ if($rs){
                 exit;
             }
 
-            $save_dir = $_SERVER['DOCUMENT_ROOT']."/pdata/optiondata";//파일을 업로드할 디렉토리
+            $save_dir = $_SERVER['DOCUMENT_ROOT']."/pdata/optiondata/";//파일을 업로드할 디렉토리
             $filename = $_FILES["optionImage1"]["name"][$k];
             $ext = pathinfo($filename,PATHINFO_EXTENSION);//확장자 구하기
             $newfilename = date("YmdHis").substr(rand(),0,6);
             $optionImage1 = $newfilename.".".$ext;//새로운 파일이름과 확장자를 합친다
             
             if(move_uploaded_file($_FILES["optionImage1"]["tmp_name"][$k], $save_dir.$optionImage1)){
-                $upload_option_image[]=$optionImage1;
+                $upload_option_image[]="/pdata/optiondata/".$optionImage1;
             }
 
         }

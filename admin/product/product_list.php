@@ -209,6 +209,9 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
                     <option value="1" <?php if($r->status==1){echo "selected";}?>>판매중</option>
                 </select>
             </td>
+            <td>
+                <a href="product_view.php?pid=<?php echo $r->pid;?>"><button class="btn btn-primary" type="button">보기</button></a>
+            </td>
           </tr>
           <?php }?>
           </tbody>
