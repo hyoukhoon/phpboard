@@ -120,12 +120,14 @@ while($rs2 = $result2->fetch_object()){
             $.ajax({
                 async : false ,
                 type : 'post' ,
-                url : 'option_img.php' ,
+                url : 'option_change.php' ,
                 data  : data ,
-                dataType : 'html' ,
+                dataType : 'json' ,
                 error : function() {} ,
-                success : function(return_data) {
-                    $("#pimg").attr("src", return_data);
+                success : function(data) {
+                    var price=parseInt(data.option_price)+<?php echo $rs->price;?>;
+                    $("#pimg").attr("src", data.image_url);
+                    $("#price").text(number_format(price));
                 }
         });
     });
