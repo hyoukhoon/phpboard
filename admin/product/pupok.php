@@ -25,6 +25,7 @@ $sale_end_date=$_POST["sale_end_date"];//판매종료일
 $file_table_id=$_POST["file_table_id"];//이미지
 $file_table_id=rtrim($file_table_id,",");//오른쪽 끝에 , 삭제
 $optionCate1=$_POST["optionCate1"];//옵션분류
+$optionCate2=$_POST["optionCate2"];//옵션분류
 
 if($_FILES["thumbnail"]["name"]){//첨부한 파일이 있으면
 
@@ -85,6 +86,10 @@ if($rs){
     $optionCnt1=$_REQUEST["optionCnt1"];//재고
     $optionPrice1=$_REQUEST["optionPrice1"];//가격
 
+    $optionName2=$_REQUEST["optionName2"];//옵션명
+    $optionCnt2=$_REQUEST["optionCnt2"];//재고
+    $optionPrice2=$_REQUEST["optionPrice2"];//가격
+
     if($_FILES["optionImage1"]["name"][0]){//첨부한 파일이 있으면
 
         for($k=0;$k<count($_FILES["optionImage1"]["name"]);$k++){
@@ -120,6 +125,18 @@ if($rs){
             $optQuery="INSERT INTO testdb.product_options
             (pid, cate, option_name, option_cnt, option_price, image_url) 
             VALUES (".$pid.", '".$optionCate1."', '".$on."', ".$optionCnt1[$k].", ".$optionPrice1[$k].", '".$upload_option_image[$k]."')";
+            $ofs=$mysqli->query($optQuery) or die($mysqli->error);
+            $k++;
+        }
+    }
+
+    $k=0;
+    foreach($optionName2 as $on){
+
+        if($on){
+            $optQuery="INSERT INTO testdb.product_options
+            (pid, cate, option_name, option_cnt, option_price) 
+            VALUES (".$pid.", '".$optionCate2."', '".$on."', ".$optionCnt2[$k].", ".$optionPrice2[$k].")";
             $ofs=$mysqli->query($optQuery) or die($mysqli->error);
             $k++;
         }

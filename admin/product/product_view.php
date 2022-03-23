@@ -5,6 +5,8 @@ if(!$_SESSION['AUID']){
     exit;
 }
 
+//ini_set( 'display_errors', '1' );
+
 $pid = $_GET['pid'];
 
 $query="select * from products where pid=".$pid;
@@ -12,10 +14,16 @@ $result = $mysqli->query($query) or die("query error => ".$mysqli->error);
 $rs = $result->fetch_object();
 
 
-$query2="select * from product_options where pid=".$pid;
+$query2="select * from product_options where cate='컬러' and pid=".$pid;
 $result2 = $mysqli->query($query2) or die("query error => ".$mysqli->error);
 while($rs2 = $result2->fetch_object()){
-    $options[]=$rs2;
+    $options1[]=$rs2;
+}
+
+$query2="select * from product_options where cate='사이즈' and pid=".$pid;
+$result2 = $mysqli->query($query2) or die("query error => ".$mysqli->error);
+while($rs2 = $result2->fetch_object()){
+    $options2[]=$rs2;
 }
 
 ?>
@@ -54,9 +62,8 @@ while($rs2 = $result2->fetch_object()){
         <div>
             가격 : <span id="price"><?php echo number_format($rs->price);?></span>원
         </div>
-        <?php if($options){?>
-        <br>
-        <div>
+        <?php if($options1){?>
+        <!-- <div>
             옵션 : 
             <select name="poption" id="poption">
                 <option value="">선택하세요</option>
@@ -64,13 +71,24 @@ while($rs2 = $result2->fetch_object()){
                     <option value="<?php echo $op->poid;?>"><?php echo $op->option_name;?></option>
                 <?php }?>
             </select>
+        </div> -->
+        <br>
+        <div>
+            <?php foreach($options1 as $op1){?>
+                <input type="radio" name="poption1" id="poption1_<?php echo $op1->poid;?>" value="<?php echo $op1->poid;?>">
+                    <span  onclick="jQuery('#poption1_<?php echo $op1->poid;?>').click();" style="content:url(<?php echo $op1->image_url;?>);height:100px;width:100px;"></span>
+                </input>
+            <?php }?>
+            
         </div>
         <br>
         <div>
-
-            <?php foreach($options as $op){?>
-                <input type="radio" name="poption" class="optradio" id="poption_<?php echo $op->poid;?>" value="<?php echo $op->poid;?>">
-                    <span  onclick="jQuery('#poption_<?php echo $op->poid;?>').click();" style="content:url(<?php echo $op->image_url;?>);height:100px;width:100px;"></span>
+            <?php foreach($options2 as $op2){
+                $option_name=$op2->option_name;
+                if($op2->option_price)$option_name.="(+".number_format($op2->option_price).")";
+                ?>
+                <input type="radio" name="poption2" id="poption2_<?php echo $op2->poid;?>" value="<?php echo $op2->poid;?>">
+                    <span  onclick="jQuery('#poption2_<?php echo $op2->poid;?>').click();"><?php echo $option_name;?></span>
                 </input>
             <?php }?>
             
@@ -86,10 +104,13 @@ while($rs2 = $result2->fetch_object()){
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script>
-    $("input[name='poption']:radio").change(function () {
-        var poid = $('input:radio[name="poption"]:checked').val();
+    $("input[name='poption1']:radio,input[name='poption2']:radio").change(function () {
+        var poid1 = $('input:radio[name="poption1"]:checked').val();
+        var poid2 = $('input:radio[name="poption2"]:checked').val();
+
         var data = {
-            poid : poid
+            poid1 : poid1,
+            poid2 : poid2
         };
             $.ajax({
                 async : false ,
@@ -99,7 +120,8 @@ while($rs2 = $result2->fetch_object()){
                 dataType : 'json' ,
                 error : function() {} ,
                 success : function(data) {
-                    var price=parseInt(data.option_price)+<?php echo $rs->price;?>;
+                    //console.log(JSON.stringify(data));
+                    var price=parseInt(data.option_price1)+parseInt(data.option_price2)+<?php echo $rs->price;?>;
                     $("#pimg").attr("src", data.image_url);
                     $("#price").text(number_format(price));
                 }

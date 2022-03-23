@@ -169,6 +169,45 @@ while($rs = $result->fetch_object()){
                 <button class="btn btn-secondary" type="button" onclick="opt1cp()">옵션추가</button>
             </td>
           </tr>
+
+          <tr>
+            <th scope="row" class="thst">
+                <select class="form-select" name="optionCate2" id="optionCate2">
+                    <option value="사이즈" selected>사이즈</option>
+                </select>
+            </th>
+            <td>
+                <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">옵션명</th>
+                    <th scope="col">재고</th>
+                    <th scope="col">가격</th>
+                    </tr>
+                </thead>
+                <tbody id="option2">
+                    <tr id="optionTr2">
+                    <th scope="row">
+                        <input class="form-control" type="text" style="max-width:200px;" value="" name="optionName2[]">
+                    </th>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control" style="max-width:100px;" value="0" name="optionCnt2[]">
+                            <span class="input-group-text">개</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control" style="max-width:100px;" value="0" name="optionPrice2[]">
+                            <span class="input-group-text">원</span>
+                        </div>
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+                <button class="btn btn-secondary" type="button" onclick="opt2cp()">옵션추가</button>
+            </td>
+          </tr>
         
           </tbody>
         </table>
@@ -183,6 +222,12 @@ while($rs = $result->fetch_object()){
         var addHtml=$("#optionTr1").html();
         var addHtml="<tr>"+addHtml+"</tr>";
         $("#option1").append(addHtml);
+    }
+
+    function opt2cp(){
+        var addHtml=$("#optionTr2").html();
+        var addHtml="<tr>"+addHtml+"</tr>";
+        $("#option2").append(addHtml);
     }
 
     function save(){
