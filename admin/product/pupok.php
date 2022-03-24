@@ -26,6 +26,8 @@ $file_table_id=$_POST["file_table_id"];//이미지
 $file_table_id=rtrim($file_table_id,",");//오른쪽 끝에 , 삭제
 $optionCate1=$_POST["optionCate1"];//옵션분류
 $optionCate2=$_POST["optionCate2"];//옵션분류
+$wms=$_REQUEST["wms"];//재고
+
 
 if($_FILES["thumbnail"]["name"]){//첨부한 파일이 있으면
 
@@ -126,6 +128,8 @@ if($rs){
             (pid, cate, option_name, option_cnt, option_price, image_url) 
             VALUES (".$pid.", '".$optionCate1."', '".$on."', ".$optionCnt1[$k].", ".$optionPrice1[$k].", '".$upload_option_image[$k]."')";
             $ofs=$mysqli->query($optQuery) or die($mysqli->error);
+            $poid=$mysqli->insert_id;
+            $op1[]=$poid;
             $k++;
         }
     }
@@ -138,7 +142,21 @@ if($rs){
             (pid, cate, option_name, option_cnt, option_price) 
             VALUES (".$pid.", '".$optionCate2."', '".$on."', ".$optionCnt2[$k].", ".$optionPrice2[$k].")";
             $ofs=$mysqli->query($optQuery) or die($mysqli->error);
+            $poid=$mysqli->insert_id;
+            $op2[]=$poid;
             $k++;
+        }
+    }
+
+    $j=0;
+    foreach($op1 as $c1){
+        foreach($op2 as $c2){
+            $wcode=$c1."_".$c2;
+            $wmsQuery="INSERT INTO testdb.wms 
+            (pid, wcode, cnt)
+            VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
+            $mysqli->query($wmsQuery) or die($mysqli->error);
+            $j++;
         }
     }
 

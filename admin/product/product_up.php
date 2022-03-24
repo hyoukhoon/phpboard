@@ -78,10 +78,6 @@ while($rs = $result->fetch_object()){
             <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="sale_ratio" id="sale_ratio"></td>
           </tr>
           <tr>
-            <th scope="row" class="thst">재고</th>
-            <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="cnt" id="cns"></td>
-          </tr>
-          <tr>
             <th scope="row" class="thst">전시옵션</th>
             <td>
             <input class="form-check-input" type="checkbox" name="ismain" id="ismain" value="1">메인&nbsp;
@@ -138,7 +134,6 @@ while($rs = $result->fetch_object()){
                 <thead>
                     <tr>
                     <th scope="col">옵션명</th>
-                    <th scope="col">재고</th>
                     <th scope="col">가격</th>
                     <th scope="col">이미지</th>
                     </tr>
@@ -146,14 +141,8 @@ while($rs = $result->fetch_object()){
                 <tbody id="option1">
                     <tr id="optionTr1">
                     <th scope="row">
-                        <input class="form-control" type="text" style="max-width:200px;" value="" name="optionName1[]">
+                        <input class="form-control opname1" type="text" style="max-width:200px;" value="" name="optionName1[]">
                     </th>
-                    <td>
-                        <div class="input-group">
-                            <input type="text" class="form-control" style="max-width:100px;" value="0" name="optionCnt1[]">
-                            <span class="input-group-text">개</span>
-                        </div>
-                    </td>
                     <td>
                         <div class="input-group">
                             <input type="text" class="form-control" style="max-width:100px;" value="0" name="optionPrice1[]">
@@ -180,22 +169,15 @@ while($rs = $result->fetch_object()){
                 <table class="table">
                 <thead>
                     <tr>
-                    <th scope="col">옵션명</th>
-                    <th scope="col">재고</th>
+                    <th scope="col" style="width:300px;">옵션명</th>
                     <th scope="col">가격</th>
                     </tr>
                 </thead>
                 <tbody id="option2">
                     <tr id="optionTr2">
                     <th scope="row">
-                        <input class="form-control" type="text" style="max-width:200px;" value="" name="optionName2[]">
+                        <input class="form-control opname2" type="text" style="max-width:200px;" value="" name="optionName2[]">
                     </th>
-                    <td>
-                        <div class="input-group">
-                            <input type="text" class="form-control" style="max-width:100px;" value="0" name="optionCnt2[]">
-                            <span class="input-group-text">개</span>
-                        </div>
-                    </td>
                     <td>
                         <div class="input-group">
                             <input type="text" class="form-control" style="max-width:100px;" value="0" name="optionPrice2[]">
@@ -208,7 +190,14 @@ while($rs = $result->fetch_object()){
                 <button class="btn btn-secondary" type="button" onclick="opt2cp()">옵션추가</button>
             </td>
           </tr>
-        
+          <tr>
+            <th scope="row" class="thst">재고</th>
+            <td>
+                <div id="wmsArea">
+                </div>
+                <button class="btn btn-secondary" type="button" onclick="wmsIns()">재고입력</button>
+            </td>
+          </tr>
           </tbody>
         </table>
         
@@ -217,6 +206,26 @@ while($rs = $result->fetch_object()){
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script>
+
+    function wmsIns(){
+        
+        $("#wmsArea").html("");
+        var addHtml="";
+        $(".opname1").each(function(idx){   
+            var n1 = $(this).val();
+            $(".opname2").each(function(idx){
+                var n2 = $(this).val();
+                //console.log("nn=>"+nkey);
+                if(n1 && n2){
+                    addHtml+='<li style="display:flex;padding-bottom:5px;">'+n1+' X '+n2+'&nbsp;<input type="text" class="form-control" style="max-width:100px;" name="wms[]" value="0">개</li>';
+                }else if(n1 && !n2){
+                    addHtml+='<li style="display:flex;padding-bottom:5px;">'+n1+'&nbsp;<input type="text" class="form-control" style="max-width:100px;" name="wms[]" value="0">개</li>';
+                }
+            });        
+        });
+
+        $("#wmsArea").append(addHtml);
+    }
 
     function opt1cp(){
         var addHtml=$("#optionTr1").html();
