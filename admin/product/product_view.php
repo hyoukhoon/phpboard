@@ -9,7 +9,7 @@ if(!$_SESSION['AUID']){
 
 $pid = $_GET['pid'];
 
-$query="select * from products where pid=".$pid;
+$query="select *, (select sum(cnt) from wms w where w.pid=p.pid) as sumcnt from products p where pid=".$pid;
 $result = $mysqli->query($query) or die("query error => ".$mysqli->error);
 $rs = $result->fetch_object();
 
@@ -60,7 +60,8 @@ while($rs2 = $result2->fetch_object()){
     <div class="col">
       <h3><?php echo $rs->name;?></h3>
         <div>
-            가격 : <span id="price"><?php echo number_format($rs->price);?></span>원
+            가격 : <span id="price"><?php echo number_format($rs->price);?></span>원<br>
+            재고 : <span id="cnt"><?php echo number_format($rs->sumcnt);?></span>EA
         </div>
         <?php if($options1){?>
         <!-- <div>
@@ -120,10 +121,11 @@ while($rs2 = $result2->fetch_object()){
                 dataType : 'json' ,
                 error : function() {} ,
                 success : function(data) {
-                    //console.log(JSON.stringify(data));
+                    console.log(data);
                     var price=parseInt(data.option_price1)+parseInt(data.option_price2)+<?php echo $rs->price;?>;
                     $("#pimg").attr("src", data.image_url);
                     $("#price").text(number_format(price));
+                    $("#cnt").text(number_format(data.cnt));
                 }
         });
     });

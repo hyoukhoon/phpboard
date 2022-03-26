@@ -75,7 +75,7 @@ if($search_keyword){
 
 
 
-$sql = "select * from products where 1=1";
+$sql = "select *, (select sum(cnt) from wms w where w.pid=p.pid) as sumcnt from products p where 1=1";
 $sql .= $search_where;
 $order = " order by pid desc";//마지막에 등록한걸 먼저 보여줌
 $limit = " limit $startLimit, $pageCount";
@@ -197,7 +197,7 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
               <?php echo number_format($r->sale_price);?>원
             <?php }?>
             </td>
-            <td style="text-align:right;"><?php echo number_format($r->cnt-$r->sale_cnt);?>EA</td>
+            <td style="text-align:right;"><?php echo number_format($r->sumcnt);?>EA</td>
             <td style="text-align:center;"><input type="checkbox" name="ismain[<?php echo $r->pid;?>]" id="ismain_<?php echo $r->pid;?>" value="1" <?php if($r->ismain){echo "checked";}?>></td>
             <td style="text-align:center;"><input type="checkbox" name="isnew[<?php echo $r->pid;?>]" id="isnew_<?php echo $r->pid;?>" value="1" <?php if($r->isnew){echo "checked";}?>></td>
             <td style="text-align:center;"><input type="checkbox" name="isbest[<?php echo $r->pid;?>]" id="isbest_<?php echo $r->pid;?>" value="1" <?php if($r->isbest){echo "checked";}?>></td>

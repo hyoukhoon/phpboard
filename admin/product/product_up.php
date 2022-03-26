@@ -215,11 +215,14 @@ while($rs = $result->fetch_object()){
             var n1 = $(this).val();
             $(".opname2").each(function(idx){
                 var n2 = $(this).val();
-                //console.log("nn=>"+nkey);
                 if(n1 && n2){
                     addHtml+='<li style="display:flex;padding-bottom:5px;">'+n1+' X '+n2+'&nbsp;<input type="text" class="form-control" style="max-width:100px;" name="wms[]" value="0">개</li>';
                 }else if(n1 && !n2){
                     addHtml+='<li style="display:flex;padding-bottom:5px;">'+n1+'&nbsp;<input type="text" class="form-control" style="max-width:100px;" name="wms[]" value="0">개</li>';
+                }else if(!n1 && n2){
+                    addHtml+='<li style="display:flex;padding-bottom:5px;">'+n2+'&nbsp;<input type="text" class="form-control" style="max-width:100px;" name="wms[]" value="0">개</li>';
+                }else{
+                    addHtml+='<li style="display:flex;padding-bottom:5px;">&nbsp;<input type="text" class="form-control" style="max-width:100px;" name="wms[]" value="0">개</li>';
                 }
             });        
         });

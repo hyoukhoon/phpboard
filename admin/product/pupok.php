@@ -14,7 +14,7 @@ $delivery_fee=$_POST["delivery_fee"];//택배비
 $price=$_POST["price"];//가격
 $sale_price=$_POST["sale_price"];//세일가
 $sale_ratio=$_POST["sale_ratio"];//세일비율
-$cnt=$_POST["cnt"];//재고
+$cnt=$_POST["cnt"]??0;//재고
 $contents=rawurldecode($_POST['contents']);//제품 설명
 $ismain=$_POST["ismain"];//메인
 $isnew=$_POST["isnew"];//신상품
@@ -125,8 +125,8 @@ if($rs){
 
         if($on){
             $optQuery="INSERT INTO testdb.product_options
-            (pid, cate, option_name, option_cnt, option_price, image_url) 
-            VALUES (".$pid.", '".$optionCate1."', '".$on."', ".$optionCnt1[$k].", ".$optionPrice1[$k].", '".$upload_option_image[$k]."')";
+            (pid, cate, option_name, option_price, image_url) 
+            VALUES (".$pid.", '".$optionCate1."', '".$on."', ".$optionPrice1[$k].", '".$upload_option_image[$k]."')";
             $ofs=$mysqli->query($optQuery) or die($mysqli->error);
             $poid=$mysqli->insert_id;
             $op1[]=$poid;
@@ -139,8 +139,8 @@ if($rs){
 
         if($on){
             $optQuery="INSERT INTO testdb.product_options
-            (pid, cate, option_name, option_cnt, option_price) 
-            VALUES (".$pid.", '".$optionCate2."', '".$on."', ".$optionCnt2[$k].", ".$optionPrice2[$k].")";
+            (pid, cate, option_name, option_price) 
+            VALUES (".$pid.", '".$optionCate2."', '".$on."', ".$optionPrice2[$k].")";
             $ofs=$mysqli->query($optQuery) or die($mysqli->error);
             $poid=$mysqli->insert_id;
             $op2[]=$poid;
@@ -149,15 +149,40 @@ if($rs){
     }
 
     $j=0;
-    foreach($op1 as $c1){
-        foreach($op2 as $c2){
-            $wcode=$c1."_".$c2;
-            $wmsQuery="INSERT INTO testdb.wms 
-            (pid, wcode, cnt)
-            VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
-            $mysqli->query($wmsQuery) or die($mysqli->error);
-            $j++;
+    if($op1 && $op2){
+        foreach($op1 as $c1){
+            foreach($op2 as $c2){
+                $wcode=$c1."_".$c2;
+                $wmsQuery="INSERT INTO testdb.wms 
+                (pid, wcode, cnt)
+                VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
+                $mysqli->query($wmsQuery) or die($mysqli->error);
+                $j++;
+            }
         }
+    }else if($op1 && !$op2){
+        foreach($op1 as $c1){
+                $wcode=$c1;
+                $wmsQuery="INSERT INTO testdb.wms 
+                (pid, wcode, cnt)
+                VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
+                $mysqli->query($wmsQuery) or die($mysqli->error);
+                $j++;
+        }
+    }else if(!$op1 && $op2){
+        foreach($op2 as $c2){
+                $wcode=$c2;
+                $wmsQuery="INSERT INTO testdb.wms 
+                (pid, wcode, cnt)
+                VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
+                $mysqli->query($wmsQuery) or die($mysqli->error);
+                $j++;
+        }
+    }else if(!$op1 && !$op2){
+                $wmsQuery="INSERT INTO testdb.wms 
+                (pid, wcode, cnt)
+                VALUES (".$pid.",'".$wcode."',".$wms[0].")";
+                $mysqli->query($wmsQuery) or die($mysqli->error);
     }
 
     if($file_table_id){//첨부한 이미지 테이블 업데이트
