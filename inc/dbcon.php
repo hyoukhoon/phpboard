@@ -1,5 +1,5 @@
 <?php
-
+include $_SERVER["DOCUMENT_ROOT"]."/inc/config.php";
 $hostname="localhost";
 $dbuserid="testman";
 $dbpasswd="1111";
