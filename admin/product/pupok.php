@@ -56,32 +56,35 @@ if($_FILES["thumbnail"]["name"]){//첨부한 파일이 있으면
 
 }
 
-$sale_cnt = 0;//판매량
-$query="INSERT INTO products
-(name, cate, content, thumbnail, price, sale_price, sale_ratio, cnt, sale_cnt, isnew, isbest, isrecom, ismain, locate, userid, sale_end_date, reg_date, delivery_fee)
-VALUES('$name'
-, '".$cate."'
-, '".$contents."'
-, '".$thumbnail."'
-, '".$price."'
-, '".$sale_price."'
-, '".$sale_ratio."'
-, ".$cnt."
-, ".$sale_cnt."
-, '".$isnew."'
-, '".$isbest."'
-, '".$isrecom."'
-, '".$ismain."'
-, '".$locate."'
-, '".$_SESSION['AUID']."'
-, '".$sale_end_date."'
-, now()
-, '".$delivery_fee."'
-)";
+$mysqli->autocommit(FALSE);//커밋이 안되도록 지정
 
-$rs=$mysqli->query($query) or die($mysqli->error);
-$pid = $mysqli -> insert_id;
-if($rs){
+try {
+
+    $sale_cnt = 0;//판매량
+    $query="INSERT INTO products
+    (name, cate, content, thumbnail, price, sale_price, sale_ratio, cnt, sale_cnt, isnew, isbest, isrecom, ismain, locate, userid, sale_end_date, reg_date, delivery_fee)
+    VALUES('$name'
+    , '".$cate."'
+    , '".$contents."'
+    , '".$thumbnail."'
+    , '".$price."'
+    , '".$sale_price."'
+    , '".$sale_ratio."'
+    , ".$cnt."
+    , ".$sale_cnt."
+    , '".$isnew."'
+    , '".$isbest."'
+    , '".$isrecom."'
+    , '".$ismain."'
+    , '".$locate."'
+    , '".$_SESSION['AUID']."'
+    , '".$sale_end_date."'
+    , now()
+    , '".$delivery_fee."'
+    )";
+
+    $rs=$mysqli->query($query) or die($mysqli->error);
+    $pid = $mysqli -> insert_id;
 
     //옵션부분
     $optionName1=$_REQUEST["optionName1"];//옵션명
@@ -149,53 +152,62 @@ if($rs){
     }
 
     $j=0;
-    if($op1 && $op2){
-        foreach($op1 as $c1){
-            foreach($op2 as $c2){
-                $wcode=$c1."_".$c2;
-                $wmsQuery="INSERT INTO testdb.wms 
-                (pid, wcode, cnt)
-                VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
-                $mysqli->query($wmsQuery) or die($mysqli->error);
-                $j++;
+
+        if($op1 && $op2){
+            foreach($op1 as $c1){
+                foreach($op2 as $c2){
+                    $wcode=$c1."_".$c2;
+                    $wmsQuery="INSERT INTO testdb.wms 
+                    (pid, wcode, cnt)
+                    VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
+                    $mysqli->query($wmsQuery) or die($mysqli->error);
+                    $j++;
+                }
             }
+        }else if($op1 && !$op2){
+            foreach($op1 as $c1){
+                    $wcode=$c1;
+                    $wmsQuery="INSERT INTO testdb.wms 
+                    (pid, wcode, cnt)
+                    VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
+                    $mysqli->query($wmsQuery) or die($mysqli->error);
+                    $j++;
+            }
+        }else if(!$op1 && $op2){
+            foreach($op2 as $c2){
+                    $wcode=$c2;
+                    $wmsQuery="INSERT INTO testdb.wms 
+                    (pid, wcode, cnt)
+                    VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
+                    $mysqli->query($wmsQuery) or die($mysqli->error);
+                    $j++;
+            }
+        }else if(!$op1 && !$op2){
+                    $wmsQuery="INSERT INTO testdb.wms 
+                    (pid, wcode, cnt)
+                    VALUES (".$pid.",'".$wcode."',".$wms[0].")";
+                    $mysqli->query($wmsQuery) or die($mysqli->error);
         }
-    }else if($op1 && !$op2){
-        foreach($op1 as $c1){
-                $wcode=$c1;
-                $wmsQuery="INSERT INTO testdb.wms 
-                (pid, wcode, cnt)
-                VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
-                $mysqli->query($wmsQuery) or die($mysqli->error);
-                $j++;
-        }
-    }else if(!$op1 && $op2){
-        foreach($op2 as $c2){
-                $wcode=$c2;
-                $wmsQuery="INSERT INTO testdb.wms 
-                (pid, wcode, cnt)
-                VALUES (".$pid.",'".$wcode."',".$wms[$j].")";
-                $mysqli->query($wmsQuery) or die($mysqli->error);
-                $j++;
-        }
-    }else if(!$op1 && !$op2){
-                $wmsQuery="INSERT INTO testdb.wms 
-                (pid, wcode, cnt)
-                VALUES (".$pid.",'".$wcode."',".$wms[0].")";
-                $mysqli->query($wmsQuery) or die($mysqli->error);
-    }
+
+    
 
     if($file_table_id){//첨부한 이미지 테이블 업데이트
         $upquery="update product_image_table set pid=".$pid." where imgid in (".$file_table_id.")";
         $fs=$mysqli->query($upquery) or die($mysqli->error);
     }
 
+    $mysqli->commit();//디비에 커밋한다.
+
     echo "<script>alert('등록했습니다.');location.href='/admin/product/product_list.php';</script>";
     exit;
 
-}else{
+}catch (Exception $e) {
+
+    $mysqli->rollback();//저장한 테이블이 있다면 롤백한다.
+
     echo "<script>alert('등록하지 못했습니다. 관리자에게 문의해주십시오.');history.back();</script>";
     exit;
+
 }
 
 
