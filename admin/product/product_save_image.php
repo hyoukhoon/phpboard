@@ -27,9 +27,10 @@ $newfilename = date("YmdHis").substr(rand(),0,6);
 $savefile = $newfilename.".".$ext;//새로운 파일이름과 확장자를 합친다
 
 if(move_uploaded_file($_FILES["savefile"]["tmp_name"], $save_dir.$savefile)){//파일 등록에 성공하면 디비에 등록해준다.
+    $sfile=$_CONFIG["CDN_SERVER"]."/pdata/".$savefile;
     $sql="INSERT INTO product_image_table
     (userid, filename)
-    VALUES('".$_SESSION['UID']."', '".$savefile."')";
+    VALUES('".$_SESSION['UID']."', '".$sfile."')";
     $result = $mysqli->query($sql) or die($mysqli->error);
     $imgid = $mysqli -> insert_id;
     $retun_data = array("result"=>"success", "imgid"=>$imgid, "savename"=>$savefile);
