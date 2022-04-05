@@ -59,7 +59,7 @@ while($rs = $result->fetch_object()){
           </tr>
           <tr>
             <th scope="row" class="thst">제품명</th>
-            <td><input type="text" class="form-control" name="name" id="name"></td>
+            <td><input type="text" class="form-control" name="name" id="name" required></td>
           </tr>
           <tr>
             <th scope="row" class="thst">택배비</th>
@@ -117,7 +117,7 @@ while($rs = $result->fetch_object()){
             <td style="height:100px;">
                 <input type="file" multiple name="upfile[]" id="upfile" style="display:none;">
                 <div id="target_file_wrap">
-                    <a href="#" onclick="jQuery('#upfile').click()" class="btn btn-primary">이미지선택</a>
+                    <a href="javascript:;" onclick="jQuery('#upfile').click()" class="btn btn-primary">이미지선택</a>
                 </div>                    
                 <div class="row row-cols-1 row-cols-md-6 g-4" id="imageArea">
                 </div>
@@ -244,8 +244,40 @@ while($rs = $result->fetch_object()){
 
     function save(){
         var markup = $('#summernote').summernote('code');
-          var contents=encodeURIComponent(markup);
-          $("#contents").val(contents);
+        var contents=encodeURIComponent(markup);
+        $("#contents").val(contents);
+
+        if($('#summernote').summernote('isEmpty')) {
+            alert('상품 설명을 입력하세요.');
+            return false;
+        }
+
+        if(!$('#thumbnail').val()){
+            alert('썸네일을 등록하십시오.');
+            return false;
+        }
+
+        if(!$('#file_table_id').val()){
+            alert('추가 이미지를 최소한 한개 이상 등록하세요.');
+            return false;
+        }
+
+        var iswms=$("#wmsArea").find('li').length;
+        if(!iswms){
+            alert('재고를 입력하세요.');
+            return false;
+        }
+
+        var wmssum = 0;
+        $("input[name='wms[]']").each(function(){    
+            wmssum = parseInt(wmssum) + parseInt($(this).val());
+        });
+
+        if(!wmssum){
+            alert('재고를 입력하세요.');
+            return false;
+        }
+
     }
 
     $(function(){
