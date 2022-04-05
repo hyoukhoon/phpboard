@@ -220,6 +220,31 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
         <a href="product_up.php">
             <button class="btn btn-primary" type="button">제품등록</button>
         </a>
+        <button class="btn btn-primary" type="button"  data-bs-toggle="modal" data-bs-target="#excelSave">엑셀로등록</button>
+        &nbsp;<a href="/admin/product/product_sample.xlsx">[샘플엑셀파일다운로드]</a>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="excelSave" tabindex="-1" aria-labelledby="excelSaveLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="excelSaveLabel">엑셀등록</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                <input type="file" class="form-control" name="efile" id="efile">
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" onclick="excel_save()">등록</button>
+            </div>
+            </div>
+        </div>
+        </div>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">        
 <script>
