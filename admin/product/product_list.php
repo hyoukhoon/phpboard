@@ -252,6 +252,40 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
         $("#sale_end_date").datepicker({ dateFormat: 'yy-mm-dd' });
     });
 
+    function excel_save(){
+        var files = $('#efile').prop('files');
+        attachFile(files[i]);
+    }
+
+    function attachFile(file) {
+    var formData = new FormData();
+    formData.append("savefile", file);
+    $.ajax({
+        url: 'excel_save.php',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType : 'json' ,
+        type: 'POST',
+        success: function (return_data) {
+            if(return_data.result=="member"){
+                alert('로그인 하십시오.');
+                return;
+            }else if(return_data.result=="size"){
+                alert('10메가 이하만 첨부할 수 있습니다.');
+                return;
+            }else if(return_data.result=="error"){
+                alert('첨부하지 못했습니다. 관리자에게 문의하십시오.');
+                return;
+            }else{
+                
+            }
+        }
+    });
+
+    }
+
     $("#cate1").change(function(){
         var cate1 = $("#cate1 option:selected").val();
         
