@@ -254,7 +254,7 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
 
     function excel_save(){
         var files = $('#efile').prop('files');
-        attachFile(files[i]);
+        attachFile(files[0]);
     }
 
     function attachFile(file) {
