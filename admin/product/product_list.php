@@ -224,7 +224,9 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
         &nbsp;<a href="/admin/product/product_sample.xlsx">[샘플엑셀파일다운로드]</a>
         
         <!-- Modal -->
+        
         <div class="modal fade" id="excelSave" tabindex="-1" aria-labelledby="excelSaveLabel" aria-hidden="true">
+        <form method="post" action="excel_save.php" enctype="multipart/form-data">
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
@@ -240,10 +242,10 @@ if($lastPageNumber > $totalPage) $lastPageNumber = $totalPage;
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary" onclick="excel_save()">등록</button>
+                <button type="submit" class="btn btn-primary">등록</button>
             </div>
             </div>
-        </div>
+        </div></form>
         </div>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">        
