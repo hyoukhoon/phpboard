@@ -1,8 +1,11 @@
 <?php session_start();
+ini_set( 'display_errors', '0' );
 include $_SERVER["DOCUMENT_ROOT"]."/inc/dbcon.php";
-require_once($_SERVER["DOCUMENT_ROOT"].'/lib/phpexcel/PHPExcel.php');
-require_once($_SERVER["DOCUMENT_ROOT"].'/lib/phpexcel/PHPExcel/IOFactory.php');
-ini_set( 'display_errors', '1' );
+require_once($_SERVER["DOCUMENT_ROOT"].'/lib/PhpOffice/Psr/autoloader.php');
+require_once($_SERVER["DOCUMENT_ROOT"].'/lib/PhpOffice/PhpSpreadsheet/autoloader.php');
+use PhpOffice\PhpSpreadsheet\IOFactory; 
+
+
 
 if(!$_SESSION['AUID']){
     $retun_data = array("result"=>"member");
@@ -19,75 +22,25 @@ if($_FILES['efile']['size']>10240000){//10메가
 $filename = $_FILES['efile']['name'];
 $filepath = $_FILES['efile']['tmp_name'];
 
-$objReader = PHPExcel_IOFactory::createReaderForFile($filepath);
-$objReader->setReadDataOnly(true);
-$objExcel = $objReader->load($filepath);
+$spreadsheet = IOFactory::load($filename);
 
-$objExcel->setActiveSheetIndex(0);
-$objWorksheet = $objExcel->getActiveSheet();
-$rowIterator = $objWorksheet->getRowIterator();
 
-foreach ($rowIterator as $row) { // 모든 행에 대해서
-    $cellIterator = $row->getCellIterator();
-    $cellIterator->setIterateOnlyExistingCells(false);
-}
-
-$maxRow = $objWorksheet->getHighestRow();
-
+$Rows = $spreadsheet->getActiveSheet()->toArray();
+echo "갯수".count($Rows);
+echo "<pre>";
+print_r($Rows);
 
 try {
 
-    for ($i = 3; $i <= $maxRow; $i++) {
-        $addinfo = new stdClass();
-        $systime=time();
-
-        $a = $objWorksheet->getCell('A' . $i)->getValue(); 
-        $b = $objWorksheet->getCell('B' . $i)->getValue(); 
-        $c = $objWorksheet->getCell('C' . $i)->getValue(); 
-        $d = $objWorksheet->getCell('D' . $i)->getValue(); 
-        $e = $objWorksheet->getCell('E' . $i)->getValue(); 
-        $f = $objWorksheet->getCell('F' . $i)->getValue(); 
-        $g = $objWorksheet->getCell('G' . $i)->getValue();
-        $h = $objWorksheet->getCell('H' . $i)->getValue();
-        $i = $objWorksheet->getCell('I' . $i)->getValue();
-        $j = $objWorksheet->getCell('J' . $i)->getValue();
-        $k = $objWorksheet->getCell('K' . $i)->getValue();
-        $l = $objWorksheet->getCell('L' . $i)->getValue();
-        $m = $objWorksheet->getCell('M' . $i)->getValue();
-        $n = $objWorksheet->getCell('N' . $i)->getValue(); 
-//        $n = PHPExcel_Style_NumberFormat::toFormattedString($n, 'YYYY-MM-DD');
-        $o = $objWorksheet->getCell('O' . $i)->getValue();
-        $p = $objWorksheet->getCell('P' . $i)->getValue(); 
-        $q = $objWorksheet->getCell('Q' . $i)->getValue(); 
-        $r = $objWorksheet->getCell('R' . $i)->getValue(); 
-        $s = $objWorksheet->getCell('S' . $i)->getValue(); 
-        $t = $objWorksheet->getCell('T' . $i)->getValue(); 
-        $u = $objWorksheet->getCell('U' . $i)->getValue(); 
-
-        echo "A=>".$a."<br>";
-        echo "B=>".$b."<br>";
-        echo "C=>".$c."<br>";
-        echo "D=>".$d."<br>";
-        echo "E=>".$e."<br>";
-        echo "F=>".$f."<br>";
-        echo "G=>".$g."<br>";
-        echo "H=>".$h."<br>";
-        echo "I=>".$i."<br>";
-        echo "J=>".$j."<br>";
-        echo "K=>".$k."<br>";
-        echo "L=>".$l."<br>";
-        echo "M=>".$m."<br>";
-        echo "N=>".$n."<br>";
-        echo "O=>".$o."<br>";
-        echo "P=>".$p."<br>";
-        echo "Q=>".$q."<br>";
-        echo "R=>".$r."<br>";
-        echo "S=>".$s."<br>";
-        echo "T=>".$t."<br>";
-        echo "U=>".$u."<br>";
-
+    foreach($Rows as $r){
+        for($i=0;$i<21;$i++){
+            echo $r[$i]."<br>";
+        }
     }
  
+    // $sql="INSERT INTO products
+    // (name, cate, content, thumbnail, price, sale_price, sale_ratio, cnt, sale_cnt, isnew, isbest, isrecom, ismain, locate, userid, sale_end_date, reg_date, status, delivery_fee)
+    // VALUES ('', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL)";
 
 } catch (exception $e) {
     echo '엑셀파일을 읽는도중 오류가 발생하였습니다.!';
