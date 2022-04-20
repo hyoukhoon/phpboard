@@ -26,7 +26,7 @@
     curl_close($ch);  // 리소스 해제
 
     echo "<pre>";
-    print_r($rs);
+    print_r($output);
 
     
 ?>

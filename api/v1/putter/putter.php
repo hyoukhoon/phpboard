@@ -14,42 +14,81 @@ if($apikey==$xapikey){//apikey가 맞으면
 
     $jsonData = file_get_contents('php://input');//외부에서 보내온 json 데이터
     $arrayData = json_decode($jsonData, true);//array로 디코드
+
     $cnt=0;
     foreach($arrayData as $ds){
-        $query="select pid, name, cate, content, thumbnail, price, sale_price, sale_ratio, cnt, sale_cnt, isnew, isbest, isrecom, ismain, locate, sale_end_date, status, delivery_fee from products where status=1 and cate like '%".$ds['cate']."%'";
-        $result = $mysqli->query($query) or die("query error => ".$mysqli->error);
-        while($rs = $result->fetch_object()){
-            
-            //추가이미지를 불러와서 추가
-            $pimg = array();
-            $query2="select filename from product_image_table where status=1 and pid=".$rs->pid." order by imgid asc";
-            $result2 = $mysqli->query($query2) or die("query error => ".$mysqli->error);
-            while($rs2 = $result2->fetch_object()){
-                $pimg[] = $rs2->filename;
-            }
-            $rs->product_images = $pimg;
 
-            //옵션을 불러와서 추가
-            $opts = array();
-            $query3="select poid, cate, option_name, option_cnt, option_price, image_url from product_options where status=1 and pid=".$rs->pid." order by poid asc";
-            $result3 = $mysqli->query($query3) or die("query error => ".$mysqli->error);
-            while($rs3 = $result3->fetch_object()){
-                $opts[] = $rs3;
-            }
-            $rs->product_options = $opts;
+        $sale_cnt = 0;//판매량
+        $query="INSERT INTO products
+        (name, cate, content, thumbnail, price, sale_price, sale_ratio, cnt, sale_cnt, isnew, isbest, isrecom, ismain, locate, userid, sale_end_date, reg_date, delivery_fee)
+        VALUES('".$ds['name']."'
+        , '".$ds['cate']."'
+        , '".$ds['content']."'
+        , '".$ds['thumbnail']."'
+        , '".$ds['price']."'
+        , '".$ds['sale_price']."'
+        , '".$ds['sale_ratio']."'
+        , ".$ds['cnt']."
+        , ".$ds['sale_cnt']."
+        , '".$ds['isnew']."'
+        , '".$ds['isbest']."'
+        , '".$ds['isrecom']."'
+        , '".$ds['ismain']."'
+        , '".$ds['locate']."'
+        , 'API'
+        , '".$ds['sale_end_date']."'
+        , now()
+        , '".$ds['delivery_fee']."'
+        )";
 
-            //wms(재고)를 불러와서 추가
-            $cnts = array();
-            $query4="select wcode,cnt from wms where status=1 and pid=".$rs->pid." order by wid asc";
-            $result4 = $mysqli->query($query4) or die("query error => ".$mysqli->error);
-            while($rs4 = $result4->fetch_object()){
-                $cnts[] = $rs4;
-            }
-            $rs->wms = $cnts;
+        $rs=$mysqli->query($query) or die($mysqli->error);
+        $pid = $mysqli -> insert_id;
 
-            $returnArray[]=$rs;
-            $cnt++;
+        if(count($ds['product_images'])>0){
+            foreach($ds['product_images'] as $p){
+                $insquery="INSERT INTO product_image_table
+                (pid, userid, filename) VALUES(".$pid.", 'api', '".$p."')";
+                $fs=$mysqli->query($insquery) or die($mysqli->error);
+            }
         }
+
+        //옵션부분
+        $ws = array();
+        if(count($ds['product_options'])>0){
+            foreach($ds['product_options'] as $s){
+                $insquery="INSERT INTO product_options
+                (pid, cate, option_name, option_price, image_url, status)
+                VALUES(".$pid.", '".$s['cate']."', '".$s['option_name']."', '".$s['option_price']."', '".$s['image_url']."', 1)";
+                $fs=$mysqli->query($insquery) or die($mysqli->error);
+                $poid = $mysqli -> insert_id;
+                if($s['poid']){
+                    $ws[$s['poid']] = $poid;
+                }
+            }
+        }
+
+        //wms
+        if(count($ds['wms'])>0){
+            foreach($ds['wms'] as $w){
+                if($w['wcode']){
+                    $code = explode("_",$w['wcode']);
+                    $xcode = $ws[$code[0]];
+                    if($code[1])$xcode.="_".$ws[$code[1]];
+                }else{
+                    $xcode = '';
+                }
+                $insquery="INSERT INTO wms
+                (pid, wcode, cnt)
+                VALUES(".$pid.", '".$xcode."', ".$w['cnt'].")";
+                $fs=$mysqli->query($insquery) or die($mysqli->error);
+            }
+        }
+
+        
+        
+
+        $cnt++;
+        
     }
 
     $result=array("success" => "true"
