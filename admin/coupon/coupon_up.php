@@ -40,21 +40,41 @@ if(!$_SESSION['AUID']){
                 </select>
             </td>
           </tr>
-          <tr>
+          <tr id="ct1">
             <th scope="row" class="thst">할인가</th>
-            <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="coupon_price" id="coupon_price" value='0'>원</td>
+            <td>
+            <div class="input-group">
+              <input type="text" style="width:200px;text-align:right;" class="form-control" name="coupon_price" id="coupon_price" value='0'>
+              <span class="input-group-text">원</span>
+            </div>
+          </td>
           </tr>
-          <tr>
+          <tr id="ct2" style="display:none;">
             <th scope="row" class="thst">할인비율</th>
-            <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="coupon_ratio" id="coupon_ratio" value='0'>%</td>
+            <td>
+            <div class="input-group">  
+              <input type="text" style="width:200px;text-align:right;" class="form-control" name="coupon_ratio" id="coupon_ratio" value='0'>
+              <span class="input-group-text">%</span>
+            </div>
+            </td>
           </tr>
           <tr>
             <th scope="row" class="thst">최소사용금액</th>
-            <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="use_min_price" id="use_min_price"></td>
+            <td>
+              <div class="input-group">    
+              <input type="number" style="width:200px;text-align:right;" class="form-control" name="use_min_price" id="use_min_price">
+              <span class="input-group-text">원</span>
+              </div>
+            </td>
           </tr>
           <tr>
             <th scope="row" class="thst">최대할인금액</th>
-            <td><input type="number" style="width:200px;text-align:right;" class="form-control" name="max_value" id="max_value"></td>
+            <td>
+            <div class="input-group">  
+            <input type="number" style="width:200px;text-align:right;" class="form-control" name="max_value" id="max_value">
+            <span class="input-group-text">원</span>
+            </div>
+          </td>
           </tr>
 
           <tr>
@@ -76,138 +96,32 @@ if(!$_SESSION['AUID']){
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script>
 
-    
-
-    function opt1cp(){
-        var addHtml=$("#optionTr1").html();
-        var addHtml="<tr>"+addHtml+"</tr>";
-        $("#option1").append(addHtml);
-    }
-
-    function opt2cp(){
-        var addHtml=$("#optionTr2").html();
-        var addHtml="<tr>"+addHtml+"</tr>";
-        $("#option2").append(addHtml);
-    }
+    $("#coupon_type").change(function(){
+        var ct1 = $("#coupon_type option:selected").val();
+        
+        if(ct1==1){
+          $("#ct1").show();
+          $("#ct2").hide();
+        }else if(ct1==2){
+          $("#ct2").show();
+          $("#ct1").hide();
+        }else{
+          $("#ct1").show();
+          $("#ct2").hide();
+        }
+    });
 
     function save(){
-        var markup = $('#summernote').summernote('code');
-        var contents=encodeURIComponent(markup);
-        $("#contents").val(contents);
 
-        if($('#summernote').summernote('isEmpty')) {
-            alert('상품 설명을 입력하세요.');
-            return false;
-        }
-
-        if(!$('#thumbnail').val()){
+        if(!$('#coupon_image').val()){
             alert('썸네일을 등록하십시오.');
             return false;
         }
 
-        if(!$('#file_table_id').val()){
-            alert('추가 이미지를 최소한 한개 이상 등록하세요.');
-            return false;
-        }
-
-        var iswms=$("#wmsArea").find('li').length;
-        if(!iswms){
-            alert('재고를 입력하세요.');
-            return false;
-        }
-
-        var wmssum = 0;
-        $("input[name='wms[]']").each(function(){    
-            wmssum = parseInt(wmssum) + parseInt($(this).val());
-        });
-
-        if(!wmssum){
-            alert('재고를 입력하세요.');
-            return false;
-        }
 
     }
 
 
-    $("#upfile").change(function(){
-
-        var files = $('#upfile').prop('files');
-        for(var i=0; i < files.length; i++) {
-            attachFile(files[i]);
-        }
-
-        $('#upfile').val('');
-
-    });   
-
-    function attachFile(file) {
-    var formData = new FormData();
-    formData.append("savefile", file);
-    $.ajax({
-        url: 'product_save_image.php',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        dataType : 'json' ,
-        type: 'POST',
-        success: function (return_data) {
-            if(return_data.result=="member"){
-                alert('로그인 하십시오.');
-                return;
-            }else if(return_data.result=="size"){
-                alert('10메가 이하만 첨부할 수 있습니다.');
-                return;
-            }else if(return_data.result=="image"){
-                alert('이미지 파일만 첨부할 수 있습니다.');
-                return;
-            }else if(return_data.result=="error"){
-                alert('첨부하지 못했습니다. 관리자에게 문의하십시오.');
-                return;
-            }else{
-                imgid = $("#file_table_id").val() + return_data.imgid + ",";
-                $("#file_table_id").val(imgid);
-                var html = "<div class='col' id='f_"+return_data.imgid+"'><div class='card h-100'><img src='/pdata/"+return_data.savename+"' class='card-img-top'><div class='card-body'><button type='button' class='btn btn-warning' onclick='file_del("+return_data.imgid+")'>삭제</button></div></div></div>";
-                $("#imageArea").append(html);
-            }
-        }
-    });
-
-    }
-
-    function file_del(imgid){
-
-        if(!confirm('삭제하시겠습니까?')){
-        return false;
-        }
-            
-        var data = {
-            imgid : imgid
-        };
-            $.ajax({
-                async : false ,
-                type : 'post' ,
-                url : 'image_delete.php' ,
-                data  : data ,
-                dataType : 'json' ,
-                error : function() {} ,
-                success : function(return_data) {
-                    if(return_data.result=="member"){
-                        alert('로그인 하십시오.');
-                        return;
-                    }else if(return_data.result=="my"){
-                        alert('본인이 작성한 제품의 이미지만 삭제할 수 있습니다.');
-                        return;
-                    }else if(return_data.result=="no"){
-                        alert('삭제하지 못했습니다. 관리자에게 문의하십시오.');
-                        return;
-                    }else{
-                        $("#f_"+imgid).hide();
-                    }
-                }
-        });
-
-        }
 
 </script>    
 <?php
